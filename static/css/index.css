@@ -1,0 +1,315 @@
+body {
+  font-family: 'Noto Sans', sans-serif;
+  background-color: #000000;
+  color: #e0e0e0;
+}
+
+.content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+  color: #ffffff !important;
+}
+
+.content p {
+  color: #cccccc !important;
+}
+
+a {
+  color: #3298dc;
+}
+
+a:hover {
+  color: #ffffff;
+}
+
+.title {
+  color: #ffffff !important;
+}
+
+.subtitle {
+  color: #dddddd !important;
+}
+
+.hero {
+  background-color: #000000 !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-video-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-video-background video {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 1s ease-in-out; /* Smooth transition */
+}
+
+.hero-video-background video.active {
+  opacity: 0.6;
+}
+
+.hero-body {
+  position: relative;
+  z-index: 2; /* Ensure text is above video */
+  background: rgba(0, 0, 0, 0.3); /* Optional: dark overlay to improve text readability */
+}
+
+.hero.is-light {
+  background-color: #1a1a1a !important;
+}
+
+.navbar {
+  background-color: #1a1a1a !important;
+  border-bottom: 1px solid #333;
+}
+
+.navbar-item, .navbar-link {
+  color: #e0e0e0 !important;
+}
+
+.navbar-item:hover, .navbar-link:hover {
+  background-color: #333 !important;
+  color: #fff !important;
+}
+
+.navbar-dropdown {
+  background-color: #1a1a1a !important;
+  border-top: 1px solid #333;
+}
+
+.footer {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0 !important;
+}
+
+.footer .content p {
+    color: #cccccc !important;
+}
+
+.footer .icon-link {
+    font-size: 25px;
+    color: #ffffff !important;
+}
+
+.link-block a {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.dnerf {
+  font-variant: small-caps;
+}
+
+
+.teaser .hero-body {
+  padding-top: 0;
+  padding-bottom: 3rem;
+}
+
+.teaser {
+  font-family: 'Google Sans', sans-serif;
+}
+
+
+.publication-title {
+}
+
+.publication-banner {
+  max-height: parent;
+
+}
+
+.publication-banner video {
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+  object-fit: fit;
+}
+
+.publication-header .hero-body {
+}
+
+.publication-title {
+    font-family: 'Google Sans', sans-serif;
+}
+
+.publication-authors {
+    font-family: 'Google Sans', sans-serif;
+}
+
+.publication-venue {
+    color: #aaaaaa;
+    width: 100%;
+}
+
+.publication-abstract {
+}
+
+.publication-video {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+
+    overflow: hidden;
+    border-radius: 10px !important;
+}
+
+.publication-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.publication-authors {
+}
+
+.publication-authors a {
+   color: #58a6ff !important;
+}
+
+.publication-authors a:hover {
+    text-decoration: underline;
+}
+
+.author-block {
+  display: inline-block;
+}
+
+.publication-banner img {
+}
+
+.publication-authors {
+  /* color: #4286f4; */
+}
+
+.publication-video {
+  /* box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6); */
+}
+
+.results-carousel {
+  overflow: hidden;
+}
+
+.results-carousel .item {
+  margin: 0 5px;
+  overflow: hidden;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  padding: 0;
+  font-size: 0;
+}
+
+.results-carousel video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.results-carousel .item p {
+  font-size: 0.85rem;
+  padding: 6px 4px;
+}
+
+/* Long-horizon carousel: uniform aspect ratio for mixed portrait/landscape */
+.long-horizon-carousel .video-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 14;
+  background: #000;
+  overflow: hidden;
+  border-radius: 10px 10px 0 0;
+}
+
+.long-horizon-carousel .video-wrapper video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+.interpolation-panel {
+  background: #1a1a1a;
+  border-radius: 10px;
+}
+
+.interpolation-panel .interpolation-image {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.interpolation-video-column {
+}
+
+.interpolation-panel .slider {
+  margin: 0 !important;
+}
+
+.interpolation-panel .slider {
+  margin: 0 !important;
+}
+
+#interpolation-image-wrapper {
+  width: 100%;
+}
+#interpolation-image-wrapper img {
+  border-radius: 5px;
+}
+
+pre {
+  background-color: #1a1a1a !important;
+  color: #cccccc !important;
+}
+
+.button.is-dark {
+  background-color: #363636 !important;
+  border-color: #363636 !important;
+  color: #fff !important;
+}
+
+.button.is-dark:hover {
+  background-color: #4a4a4a !important;
+  border-color: #4a4a4a !important;
+}
+
+/* Custom width for larger screens */
+@media screen and (min-width: 1100px) {
+  .container.is-max-desktop {
+    max-width: 1400px;
+  }
+}
+
+/* --- Dark background: make figure captions readable --- */
+figure figcaption {
+  color: #e6e6e6;              /* caption 主体文字 */
+}
+figure figcaption strong,
+figure figcaption .caption-title {
+  color: #ffffff;              /* caption 标题更亮 */
+  font-weight: 600;
+}
+
+/* 如果你整站黑底，还可以顺手把 content 的默认字色提亮一点 */
+.content { color: #e6e6e6; }

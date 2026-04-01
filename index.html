@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="ONE-SHOT: Compositional Human-Environment Video Synthesis via Spatial-Decoupled Motion Injection and Hybrid Context Integration">
+  <meta name="keywords" content="Controllable video generation, human-environment video synthesis, human-centric video synthesis, diffusion models, video diffusion, compositional generation, motion injection, Dynamic-Grounded-RoPE, Hybrid Context Integration, ControlNet, LoRA">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ONE-SHOT: Compositional Human-Environment Video Synthesis via
+Spatial-Decoupled Motion Injection and Hybrid Context Integration</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script> -->
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          NavBar
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="#method">Method</a>
+          <a class="navbar-item" href="#compositional-controls">Compositional Controls</a>
+          <a class="navbar-item" href="#context-memory">Context Memory</a>
+          <a class="navbar-item" href="#instruction-editing">Instruction-based Editing</a>
+          <a class="navbar-item" href="#long-horizon">Long-horizon Generation</a>
+          <a class="navbar-item" href="#video">Video</a>
+          <a class="navbar-item" href="#BibTeX">BibTeX</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+<section class="hero is-fullheight">
+  <div class="hero-video-background">
+    <!-- Double buffering for smooth transition -->
+    <video id="hero-video-1" class="video-player active" autoplay muted playsinline>
+      <source src="https://modelscope.cn/datasets/Hlyyyyy/oneshot-videos/resolve/master/tests/ID_Fengyuan-SMPLX_taiji-Scene_orbit_view_normal_neg_gen_1768979805_ourGen81.mp4" type="video/mp4">
+    </video>
+    <video id="hero-video-2" class="video-player" muted playsinline>
+    </video>
+  </div>
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">ONE-SHOT: Compositional Human-Environment Video Synthesis via Spatial-Decoupled Motion Injection and Hybrid Context Integration</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://martayang.github.io/">Fengyuan Yang</a><sup>1,2</sup>,</span>
+            <span class="author-block">
+              <a href="#">Luying Huang</a><sup>2,&dagger;</sup>,</span>
+            <span class="author-block">
+              <a href="https://guanjz20.github.io/">Jiazhi Guan</a><sup>2,*</sup>,
+            </span>
+            <span class="author-block">
+              <a href="#">Quanwei Yang</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="#">Dongwei Pan</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="#">Jianglin Fu</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="#">Haocheng Feng</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="#">Wei He</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=2Pedf3EAAAAJ">Kaisiyuan Wang</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://hangz-nju-cuhk.github.io/">Hang Zhou</a><sup>2,*</sup>,
+            </span>
+            <span class="author-block">
+              <a href="#">Angela Yao</a><sup>1</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>National University of Singapore,</span>
+            <span class="author-block"><sup>2</sup>Baidu, AMU</span>
+          </div>
+          <div class="is-size-6 publication-authors" style="color: #aaaaaa;">
+            <span class="author-block">Work done during Fengyuan's internship at Baidu,</span>
+            <span class="author-block"><sup>&dagger;</sup>Project leader,</span>
+            <span class="author-block"><sup>*</sup>Corresponding authors</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <!-- <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span> -->
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=M0WEowDyYqE"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <!-- Hugging Face Link. -->
+              <!-- <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      &#129303;
+                  </span>
+                  <span>Hugging Face</span>
+                </a>
+              </span> -->
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code (Coming Soon)</span>
+                </a>
+              </span>
+              <!-- Dataset Link. -->
+              <!-- <span class="link-block">
+                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a> -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Result Carousel (Commented out as files are missing) -->
+<!-- 
+<section class="hero is-light is-small">
+  ... (Video carousel content removed to prevent 404 errors) ...
+</section> 
+-->
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Teaser Image -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <div class="publication-image">
+          <img src="./static/images/fig_teaser.png" alt="Teaser Image" style="width: 100%; height: auto; border-radius: 10px;">
+        </div>
+      </div>
+    </div> -->
+    <!--/ Teaser Image -->
+
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered" style="max-width: 960px; margin: 0 auto;">
+      <div class="column is-full">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            We propose ONE-SHOT, a parameter-efficient framework for compositional human-environment video generation.
+          </p>
+          <p>
+            Our key insight is to factorize the generative process into disentangled signals. 
+            Specifically, we introduce a canonical-space injection mechanism that decouples human dynamics from environmental cues via cross-attention. 
+            The proposed <span class="dnerf">Dynamic-Grounded-RoPE</span>, a novel positional embedding strategy that establishes spatial correspondences between disparate scenes
+            without any heuristic 3D alignments. 
+          </p>
+          <p>
+            To support long-horizon synthesis, we introduce a <span class="dnerf">Hybrid Context Integration</span> mechanism to maintain subject and scene consistency across minute-level generations. 
+            Experiments demonstrate that our method significantly outperforms state-of-the-art methods, offering superior structural control and creative diversity for video synthesis.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+  </div>
+</section>
+
+
+<section class="section" id="method">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Method</h2>
+
+    <div style="max-width: 960px; margin: 0 auto;">
+      <figure class="mb-6">
+        <img src="static/images/fig_pipeline.png"
+             alt="ONE-SHOT method overview"
+             style="width: 100%; height: auto; border-radius: 10px;">
+        <figcaption class="has-text-centered is-size-6 mt-2">
+          <span class="has-text-white has-text-weight-semibold">Model Architecture.</span>
+          Our model builds on a <i>pretrained video foundation model</i> augmented with a
+          <i>conditioning branch</i> for concept injection. Environmental cues are encoded from
+          projected point clouds and depth maps, while identity appearance and context memory
+          maintain visual coherence. Disentangled human dynamics are injected via Decoupled Motion Cross-Attention.
+        </figcaption>
+      </figure>
+
+      <figure>
+        <img src="static/images/fig_cross.png"
+             alt="Decoupled Motion Cross-attention"
+             style="width: 100%; height: auto; border-radius: 10px;">
+        <figcaption class="has-text-centered is-size-6 mt-2">
+          <span class="has-text-white has-text-weight-semibold">Decoupled Motion Cross-attention.</span>
+          The canonical-space human pose is injected into the video through cross-attention,
+          where the proposed Dynamic-Grounded-RoPE bridges the spatial discrepancy between the
+          environment and human spaces.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section" id="compositional-controls">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Compositional Controls</h2>
+    <p class="content has-text-centered">
+      Freely compose <b>scene</b>, <b>identity</b>, <b>motion</b>, and <b>camera</b> into new videos.
+    </p>
+
+    <!-- 1) Scene -->
+    <h3 class="title is-4 mt-6">Scene Replacement</h3>
+    <div class="carousel results-carousel" data-slides-to-show="4" data-slides-to-scroll="4">
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_walk_backview-Scene_city1_scene_gen_1775017332_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="font-weight: 700; color: white;">City·</span><span style="color: #aaaaaa;">Hepburn·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_walk_backview-Scene_run_scene_gen_1775030713_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="font-weight: 700; color: white;">Road·</span><span style="color: #aaaaaa;">Hepburn·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_walk_backview-Scene_skiing_scene_gen_1775026058_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="font-weight: 700; color: white;">SkiResort·</span><span style="color: #aaaaaa;">Hepburn·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_walk_backview-Scene_switzerland3_scene_gen_1775026046_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="font-weight: 700; color: white;">Villa·</span><span style="color: #aaaaaa;">Hepburn·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Trump-SMPLX_taiji-Scene_museum4_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="font-weight: 700; color: white;">Museum·</span><span style="color: #aaaaaa;">Trump·TaiChi</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Trump-SMPLX_taiji-Scene_bluebackground2_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="font-weight: 700; color: white;">BlueTown1·</span><span style="color: #aaaaaa;">Trump·TaiChi</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Trump-SMPLX_taiji-Scene_bluebackground3_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="font-weight: 700; color: white;">BlueTown2·</span><span style="color: #aaaaaa;">Trump·TaiChi</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Trump-SMPLX_taiji-Scene_museum4_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="font-weight: 700; color: white;">Austria·</span><span style="color: #aaaaaa;">Trump·TaiChi</span></p>
+      </div>
+    </div>
+
+    <!-- 2) Identity -->
+    <h3 class="title is-4 mt-6">Identity Replacement</h3>
+    <div class="carousel results-carousel" data-slides-to-show="5" data-slides-to-scroll="5">
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Trump-SMPLX_IMG_2478-Scene_IMG_2478_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">GraffitiWall·</span><span style="font-weight: 700; color: white;">Trump</span><span style="color: #aaaaaa;">·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_JenHsun-SMPLX_IMG_2478-Scene_IMG_2478_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">GraffitiWall·</span><span style="font-weight: 700; color: white;">JenHsun</span><span style="color: #aaaaaa;">·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_IMG_2478-Scene_IMG_2478_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">GraffitiWall·</span><span style="font-weight: 700; color: white;">Hepburn</span><span style="color: #aaaaaa;">·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Fengyuan-SMPLX_IMG_2478-Scene_IMG_2478_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">GraffitiWall·</span><span style="font-weight: 700; color: white;">Fengyuan</span><span style="color: #aaaaaa;">·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Siyu-SMPLX_IMG_2478-Scene_IMG_2478_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">GraffitiWall·</span><span style="font-weight: 700; color: white;">Siyu</span><span style="color: #aaaaaa;">·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Trump-SMPLX_Austria1_human-Scene_Austria1_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Austria1·</span><span style="font-weight: 700; color: white;">Trump</span><span style="color: #aaaaaa;">·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_JenHsun-SMPLX_Austria1_human-Scene_Austria1_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Austria1·</span><span style="font-weight: 700; color: white;">JenHsun</span><span style="color: #aaaaaa;">·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_Austria1_human-Scene_Austria1_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Austria1·</span><span style="font-weight: 700; color: white;">Hepburn</span><span style="color: #aaaaaa;">·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Fengyuan-SMPLX_Austria1_human-Scene_Austria1_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Austria1·</span><span style="font-weight: 700; color: white;">Fengyuan</span><span style="color: #aaaaaa;">·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Siyu-SMPLX_Austria1_human-Scene_Austria1_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Austria1·</span><span style="font-weight: 700; color: white;">Siyu</span><span style="color: #aaaaaa;">·Walk</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Trump-SMPLX_taiji-Scene_museum4_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Museum·</span><span style="font-weight: 700; color: white;">Trump</span><span style="color: #aaaaaa;">·TaiChi</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_JenHsun-SMPLX_taiji-Scene_museum4_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Museum·</span><span style="font-weight: 700; color: white;">JenHsun</span><span style="color: #aaaaaa;">·TaiChi</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_taiji-Scene_museum4_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Museum·</span><span style="font-weight: 700; color: white;">Hepburn</span><span style="color: #aaaaaa;">·TaiChi</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Fengyuan-SMPLX_taiji-Scene_museum4_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Museum·</span><span style="font-weight: 700; color: white;">Fengyuan</span><span style="color: #aaaaaa;">·TaiChi</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Siyu-SMPLX_taiji-Scene_museum4_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Museum·</span><span style="font-weight: 700; color: white;">Siyu</span><span style="color: #aaaaaa;">·TaiChi</span></p>
+      </div>
+    </div>
+
+    <!-- 3) Motion -->
+    <h3 class="title is-4 mt-6">Motion Editing</h3>
+    <div class="carousel results-carousel" data-slides-to-show="3" data-slides-to-scroll="3">
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_JenHsun-SMPLX_forward_circle-Scene_bluebackground2_scene_gen_1769067994_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">BlueBackground·JenHsun·</span><span style="font-weight: 700; color: white;">ForwardCircle</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_JenHsun-SMPLX_walk_forward-Scene_bluebackground2_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">BlueBackground·JenHsun·</span><span style="font-weight: 700; color: white;">WalkForward</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_JenHsun-SMPLX_handsup-Scene_bluebackground2_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Museum·JenHsun·</span><span style="font-weight: 700; color: white;">HandsUp</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_forward_circle-Scene_museum4_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Museum·Hepburn·</span><span style="font-weight: 700; color: white;">ForwardCircle</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_taiji-Scene_museum4_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Museum·Hepburn·</span><span style="font-weight: 700; color: white;">TaiChi</span></p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_walk_right_left-Scene_museum4_scene_gen_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6"><span style="color: #aaaaaa;">Museum·Hepburn·</span><span style="font-weight: 700; color: white;">WalkRightLeft</span></p>
+      </div>
+      
+      
+    </div>
+
+    <!-- 4) Camera -->
+    <h3 class="title is-4 mt-6">Camera Motion Editing</h3>
+    <div class="carousel results-carousel" data-slides-to-show="3" data-slides-to-scroll="3">
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_taiji-Scene_orbit_view_normal_neg_gen_1775045943_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6">Orbit around the subject</p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_taiji-Scene_dolly_right_gen_1775046779_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6">Dolly right</p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/ID_Hepburn-SMPLX_taiji-Scene_dolly_left_gen_1775045964_ourGen81.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6">Dolly left</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="context-memory">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Context Memory (Viewpoint Revisit Consistency)</h2>
+
+    <div class="carousel results-carousel">
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/view_point_consistency.mp4" type="video/mp4">
+        </video>
+        <!-- <p class="has-text-centered is-size-6">Motion: Taiji · Scene: Orbit View</p> -->
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="instruction-editing">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Instruction-based Editing</h2>
+    <p class="content has-text-centered">
+      we have strong compatibility with the pretrained VFM and minimal loss of its native text-conditioned editing ability..
+    </p>
+
+    <div class="carousel results-carousel" data-slides-to-show="2" data-slides-to-scroll="1">
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/Doraemon.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6">Doraemon</p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/sleek_robot_dog.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6">Sleek Robot Dog</p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/American_Shorthair_cat.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6">American Shorthair Cat</p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/tiny_glowing_dragon.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6">Tiny Glowing Dragon</p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/floating_balloon-dog_sculpture.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6">Floating Balloon-Dog Sculpture</p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/origami_crane_spirit.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6">Origami Crane Spirit</p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/tiny_enchanted_deer.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6">Tiny Enchanted Deer</p>
+      </div>
+      <div class="item">
+        <video controls muted loop playsinline width="100%">
+          <source src="./static/videos_web/corgi.mp4" type="video/mp4">
+        </video>
+        <p class="has-text-centered is-size-6">Corgi</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="long-horizon">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Long-horizon Generation</h2>
+    <div class="carousel results-carousel long-horizon-carousel" data-slides-to-show="2" data-slides-to-scroll="2">
+      <div class="item">
+        <div class="video-wrapper">
+          <video controls muted loop playsinline width="100%">
+            <source src="./static/videos_web/long_video_Trump.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="has-text-centered is-size-6">Trump in Office Room</p>
+      </div>
+      <div class="item">
+        <div class="video-wrapper">
+          <video controls muted loop playsinline width="100%">
+            <source src="./static/videos_web/long_video_Hepburn.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="has-text-centered is-size-6">Hepburn in Office Room</p>
+      </div>
+      <div class="item">
+        <div class="video-wrapper">
+          <video controls muted loop playsinline width="100%">
+            <source src="./static/videos_web/long_video_JenHsun.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="has-text-centered is-size-6">JenHsun in Garden</p>
+      </div>
+      <div class="item">
+        <div class="video-wrapper">
+          <video controls muted loop playsinline width="100%">
+            <source src="./static/videos_web/long_video_fengyaun.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="has-text-centered is-size-6">Fengyuan in Garden</p>
+      </div>
+      
+      
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="video">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/M0WEowDyYqE?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{,
+  author    = {},
+  title     = {},
+  journal   = {},
+  year      = {2026},
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <!-- <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos_web/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div> -->
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            Website source code based on the <a
+            href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> project page. If you want to reuse their source code, please credit them appropriately. 
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
