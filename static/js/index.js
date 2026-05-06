@@ -112,10 +112,10 @@ $(function() {
   var playlist = [
     "https://modelscope.cn/datasets/Hlyyyyy/oneshot-videos/resolve/master/tests/ID_Fengyuan-SMPLX_taiji-Scene_orbit_view_normal_neg_gen_1768979805_ourGen81.mp4",
     "./static/videos_web/ID_Hepburn-SMPLX_walk_backview-Scene_city1_scene_gen_1775017332_ourGen81.mp4",
-    "./static/videos_web/ID_Trump-SMPLX_taiji-Scene_bluebackground2_scene_gen_ourGen81.mp4",
+    "./static/videos_web/ID_WillSmith-SMPLX_taiji-Scene_bluebackground2_scene_gen_1777381670_ourGen81.mp4",
     "./static/videos_web/ID_JenHsun-SMPLX_forward_circle-Scene_bluebackground2_scene_gen_1769067994_ourGen81.mp4",
     "./static/videos_web/ID_Hepburn-SMPLX_taiji-Scene_museum4_scene_gen_ourGen81.mp4",
-    "./static/videos_web/ID_Trump-SMPLX_Austria1_human-Scene_Austria1_scene_gen_ourGen81.mp4",
+    "./static/videos_web/ID_WillSmith-SMPLX_Austria1_human-Scene_Austria1_scene_gen_1777452744_ourGen81.mp4",
     "./static/videos_web/ID_Siyu-SMPLX_IMG_2478-Scene_IMG_2478_gen_ourGen81.mp4",
     "./static/videos_web/ID_Hepburn-SMPLX_walk_backview-Scene_skiing_scene_gen_1775026058_ourGen81.mp4",
   ];
